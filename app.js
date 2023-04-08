@@ -53,7 +53,7 @@ function exportRecording() {
 }
 
 // Transcription and Summarization
-const SERVER_URL = 'http://127.0.0.1:5000';
+const SERVER_URL = 'https://wtfdwjta.vercel.app/';
 
 transcribeButton.onclick = async () => {
     const formData = new FormData();
