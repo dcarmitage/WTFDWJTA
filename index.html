@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WTFDWJTA?</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelementplayer.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.16/mediaelement-and-player.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>WTF did we just talk about?</h1>
+        <button id="toggleRecording">Start Recording 🔴</button>
+        <button id="playRecording" disabled>Play Recording</button>
+        <br><br>
+
+        <a id="downloadRecording" href="#" style="display:none;">Download Recording</a>
+        <br><br>
+
+        <button id="transcribe" disabled>Transcribe</button>
+        <pre id="transcription" style="border: 1px solid; white-space: pre-wrap;"></pre>
+        <br><br>
+
+        <button id="summarize" disabled>WTF</button>
+        <pre id="summary" style="border: 1px solid;"></pre>
+
+        <div id="spinner" style="display:none;"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
