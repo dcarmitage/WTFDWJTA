@@ -101,6 +101,7 @@ summaryButton.onclick = async () => {
         if (response.ok) {
             const { summary } = await response.json();
             summaryArea.textContent = summary;
+            summaryButton.disabled = false;
         } else {
             throw new Error(`Summarization request failed with status ${response.status}`);
         }

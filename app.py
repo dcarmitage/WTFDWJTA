@@ -1,10 +1,20 @@
 from flask import Flask, request, jsonify
 import os
 import tempfile
+import requests
+from dotenv import load_dotenv
 import replicate
+import openai
+
+
+load_dotenv()
+
+# Initialize the OpenAI API
+api_key = os.environ.get('OPENAI_API_KEY')
+openai.api_key = api_key
 
 app = Flask(__name__, static_folder='.', static_url_path='')
-API_TOKEN = os.environ['REPLICATE_API_TOKEN']
+REPLICATE_API_TOKEN = os.environ.get('REPLICATE_API_TOKEN')
 
 @app.route('/transcribe', methods=['POST'])
 def transcribe_audio():
@@ -31,15 +41,46 @@ def transcribe_audio():
 
     return jsonify(output)
 
+# You are a helpful assistant that summarizes text. When I provide you with a text block containing human conversation, please analyze and summarize the main ideas or key points discussed, while keeping the essence of the dialogues intact. To improve readability and organization, kindly include markup and headings where helpful. This will not only assist me in quickly grasping the important aspects of the conversation but also make the information more accessible and easy to navigate. Your attention to detail and clear structure will enable me to understand and respond effectively.
+
 @app.route('/summarize', methods=['POST'])
 def summarize_text():
     data = request.get_json()
     text = data['text']
 
-    # Summarize the text using a function or an API of your choice
-    summary = text  # Replace this line with summarization logic
+    # Summarize the text using GPT-3.5-turbo from the OpenAI API
+    try:
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {api_key}"
+            },
+            json={
+                "model": "gpt-3.5-turbo",
+                "messages": [
+                    {"role": "system", "content": "When I provide you with a text block containing human conversation, please analyze and summarize the main ideas or key points discussed, while keeping the essence of the dialogues intact. To improve readability and organization, kindly include markup and headings where helpful. This will not only assist me in quickly grasping the important aspects of the conversation but also make the information more accessible and easy to navigate. Your attention to detail and clear structure will enable me to understand and respond effectively."},
+                    {"role": "user", "content": f"Please summarize this succinctly. Use bullet points where helpful: {text}"}
+                ],
+                "max_tokens": 100,
+                "n": 1,
+                "temperature": 0.7
+            }
+
+        )
+
+        response.raise_for_status()  # Raise an exception if there's an error
+        json_response = response.json()
+        summary = json_response['choices'][0]['message']['content'].strip()
+    except requests.exceptions.RequestException as e:
+        print("Error calling OpenAI API:", e)
+        summary = "Error: Cannot summarize text due to a connection issue with the OpenAI API. Please check the server logs for more details."
+    except Exception as e:
+        print("Unexpected error:", e)
+        summary = "Error: Unexpected error while summarizing text. Please check the server logs for more details."
 
     return jsonify({"summary": summary})
+
 
 @app.route('/')
 def index():
