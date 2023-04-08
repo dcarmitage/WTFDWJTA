@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Transcription and Summarization</title>
+    <style>
+        #spinner::after {
+          content: "";
+          display: block;
+          width: 2em;
+          height: 2em;
+          border-radius: 50%;
+          border: 0.2em solid transparent;
+          border-top-color: #000;
+          animation: spinner 0.75s linear infinite;
+        }
+      
+        @keyframes spinner {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      </style>
+</head>
+<body>
+    <h1>Audio Transcription and Summarization</h1>
+    <button id="startRecording">Start Recording</button>
+    <button id="stopRecording" disabled>Stop Recording</button>
+    <button id="playRecording" disabled>Play Recording</button>
+    <br><br>
+
+    <a id="downloadRecording" href="#" style="display:none;">Download Recording</a>
+    <br><br>
+
+    <button id="transcribe" disabled>Transcribe</button>
+    <pre id="transcription" style="border: 1px solid; white-space: pre-wrap;"></pre>
+    <br><br>
+
+    <button id="summarize" disabled>WTF</button>
+    <pre id="summary" style="border: 1px solid;"></pre>
+
+    <div id="spinner" style="display:none;"></div>
+    <script src="app.js"></script>
+</body>
+</html>
