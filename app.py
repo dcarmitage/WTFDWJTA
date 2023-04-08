@@ -60,9 +60,9 @@ def summarize_text():
                 "model": "gpt-3.5-turbo",
                 "messages": [
                     {"role": "system", "content": "When I provide you with a text block containing human conversation, please analyze and summarize the main ideas or key points discussed, while keeping the essence of the dialogues intact. To improve readability and organization, kindly include markup and headings where helpful. This will not only assist me in quickly grasping the important aspects of the conversation but also make the information more accessible and easy to navigate. Your attention to detail and clear structure will enable me to understand and respond effectively."},
-                    {"role": "user", "content": f"Please summarize this succinctly. Use bullet points where helpful: {text}"}
+                    {"role": "user", "content": f"Please summarize this in under 500 characters. Use bullet points where helpful: {text}"}
                 ],
-                "max_tokens": 100,
+                "max_tokens": 500,
                 "n": 1,
                 "temperature": 0.7
             }

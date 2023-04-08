@@ -2,9 +2,9 @@
 let chunks = [];
 let recorder;
 let audioBlob;
+let isRecording = false;
 
-const startButton = document.getElementById('startRecording');
-const stopButton = document.getElementById('stopRecording');
+const toggleRecordingButton = document.getElementById('toggleRecording');
 const playButton = document.getElementById('playRecording');
 const downloadLink = document.getElementById('downloadRecording');
 const transcribeButton = document.getElementById('transcribe');
@@ -12,26 +12,26 @@ const summaryButton = document.getElementById('summarize');
 const transcriptionArea = document.getElementById('transcription');
 const summaryArea = document.getElementById('summary');
 
-startButton.onclick = async () => {
+toggleRecordingButton.onclick = async () => {
+  if (!isRecording) {
     chunks = [];
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        recorder = new MediaRecorder(stream);
-        recorder.ondataavailable = e => chunks.push(e.data);
-        recorder.onstop = exportRecording;
-        recorder.start();
-        startButton.disabled = true;
-        stopButton.disabled = false;
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = e => chunks.push(e.data);
+      recorder.onstop = exportRecording;
+      recorder.start();
+      isRecording = true;
+      toggleRecordingButton.textContent = "Stop Recording ⏹️";
     } catch (error) {
-        console.error('Error starting the recording:', error);
-        alert('An error occurred while starting the recording. Please check the console for more details.');
+      console.error('Error starting the recording: ', error);
+      alert('An error occurred while starting the recording. Please check the console for more details.');
     }
-};
-
-stopButton.onclick = () => {
+  } else {
     recorder.stop();
-    startButton.disabled = false;
-    stopButton.disabled = true;
+    isRecording = false;
+    toggleRecordingButton.textContent = "Start Recording 🔴";
+  }
 };
 
 playButton.onclick = () => {
@@ -91,6 +91,9 @@ transcribeButton.onclick = async () => {
 summaryButton.onclick = async () => {
     summaryButton.disabled = true;
 
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'block'; // Show the spinner
+
     try {
         const response = await fetch(SERVER_URL + '/summarize', {
             method: 'POST',
@@ -109,5 +112,8 @@ summaryButton.onclick = async () => {
         console.error('Error during summarization:', error);
         alert('An error occurred while summarizing the text. Please check the console for more details.');
         summaryButton.disabled = false;
+    } finally {
+        spinner.style.display = 'none'; // Hide the spinner
     }
 };
+
